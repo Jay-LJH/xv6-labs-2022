@@ -5,7 +5,10 @@
 #include "memlayout.h"
 #include "spinlock.h"
 #include "proc.h"
+#include "sysinfo.h"
 
+extern uint64 numproc(void);
+extern uint64 freemem();
 uint64
 sys_exit(void)
 {
@@ -52,7 +55,7 @@ uint64
 sys_sleep(void)
 {
   int n;
-  uint ticks0;
+    uint ticks0;
 
   argint(0, &n);
   if(n < 0)
@@ -90,4 +93,20 @@ sys_uptime(void)
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+uint64 sys_trace(){
+  int mask;
+  argint(0, &mask);
+  myproc()->tracemask=mask;
+  return 0;
+}
+
+uint64 sys_sysinfo(){
+  struct sysinfo info;
+  info.freemem=freemem();
+  info.nproc=numproc();
+  uint64 st;
+  argaddr(0,&st);
+  return copyout(myproc()->pagetable,st,(char*)&info,sizeof(struct sysinfo));
 }

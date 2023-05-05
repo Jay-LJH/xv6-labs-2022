@@ -1,0 +1,6 @@
+usertrap
+the first syscall: exec
+sstatus equals to 0x22 0x22&(1<<8)=0 means that cpu at user mode
+s2
+process try to access memory at 0, which is unacceptable for a cpu at usermode.
+initcode 1
