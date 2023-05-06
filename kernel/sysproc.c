@@ -7,8 +7,6 @@
 #include "proc.h"
 #include "sysinfo.h"
 
-extern uint64 numproc(void);
-extern uint64 freemem();
 uint64
 sys_exit(void)
 {
