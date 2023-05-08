@@ -1,0 +1,6 @@
+sys_fstat: also store a struct in the former page
+page 0 is the trampoline page,contain the trampoline code
+page 2 is the usyscall page created in former tests
+user can access to page 1 as PTE-U code valid
+contain the user code
+ 

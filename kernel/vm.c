@@ -437,3 +437,22 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
     return -1;
   }
 }
+
+//print a pagetable
+void vmprint(pagetable_t pagetable){
+  printf("page table %p\n",pagetable);
+  vmprint_recursive(pagetable,0);
+}
+void vmprint_recursive(pagetable_t pagetable,int level){
+  char* header[]={"..",".. ..",".. .. .."};
+  for(int i = 0; i < 512; i++){
+    pte_t pte = pagetable[i];
+    if((pte & PTE_V) && (pte & (PTE_R|PTE_W|PTE_X)) == 0){
+      printf("%s%d: pte %p pa %p\n",header[level],i,pte,PTE2PA(pte));
+      uint64 child = PTE2PA(pte);
+      vmprint_recursive((pagetable_t)child,level+1);
+    } else if(pte & PTE_V){
+      printf("%s%d: pte %p pa %p\n",header[level],i,pte,PTE2PA(pte));
+    }
+  }
+}
