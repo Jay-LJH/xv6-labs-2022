@@ -1,0 +1,7 @@
+a0
+at line 46, compiler just calculate the result of f(8)+1 without calling f0
+f call g at line 32 simply add 3 to a0
+000000000000043e
+38 ra store the return pc
+He110 World, dont change 57616, but change i to 726c6400
+printf continue try to read argument, if this is a readable addr bychance, printf will read it and interpret it as int.
