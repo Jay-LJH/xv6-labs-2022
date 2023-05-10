@@ -333,6 +333,8 @@ int uvmcopy(pagetable_t old, pagetable_t new, uint64 sz)
 
 int forkpage(pagetable_t pagetable, uint64 va)
 {
+  if(va>=MAXVA)
+    return -1;
   pte_t *pte;
   uint64 pa;
   char *mem;
