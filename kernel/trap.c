@@ -67,7 +67,13 @@ usertrap(void)
     syscall();
   } else if((which_dev = devintr()) != 0){
     // ok
-  } else {
+  } else if(r_scause()== 15){ //check if a writeable page
+    if(forkpage(p->pagetable,r_stval())==-1){
+      printf("from trap: kill %s\n",p->name);
+      setkilled(p);
+    };
+  } 
+  else {
     printf("usertrap(): unexpected scause %p pid=%d\n", r_scause(), p->pid);
     printf("            sepc=%p stval=%p\n", r_sepc(), r_stval());
     setkilled(p);
