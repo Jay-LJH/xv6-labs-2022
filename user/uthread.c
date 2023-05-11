@@ -12,13 +12,14 @@
 
 
 struct thread {
+  uint64     reg[14];           //save register ra sp s0-s11
   char       stack[STACK_SIZE]; /* the thread's stack */
   int        state;             /* FREE, RUNNING, RUNNABLE */
 };
 struct thread all_thread[MAX_THREAD];
 struct thread *current_thread;
 extern void thread_switch(uint64, uint64);
-              
+extern void setstack(uint64);        
 void 
 thread_init(void)
 {
@@ -62,6 +63,7 @@ thread_schedule(void)
      * Invoke thread_switch to switch from t to next_thread:
      * thread_switch(??, ??);
      */
+    thread_switch((uint64)t,(uint64)current_thread);
   } else
     next_thread = 0;
 }
@@ -75,7 +77,11 @@ thread_create(void (*func)())
     if (t->state == FREE) break;
   }
   t->state = RUNNABLE;
+
   // YOUR CODE HERE
+  t->reg[0]=(uint64)func;
+  t->reg[1]=(uint64)t->stack+STACK_SIZE;
+  //thread_yield();
 }
 
 void 
