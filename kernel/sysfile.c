@@ -133,11 +133,12 @@ sys_link(void)
     return -1;
 
   begin_op();
-  if ((ip = namei(old)) == 0)
+  if ((ip = namei(old)) == 0 || ip->type == T_SYMLINK)
   {
     end_op();
     return -1;
   }
+  
 
   ilock(ip);
   if (ip->type == T_DIR)
@@ -204,7 +205,7 @@ sys_unlink(void)
     return -1;
 
   begin_op();
-  if ((dp = nameiparent(path, name)) == 0)
+  if ((dp = nameiparent(path, name)) == 0 || dp->type == T_SYMLINK)
   {
     end_op();
     return -1;

@@ -6,6 +6,8 @@
         "sleeplock.h": "c",
         "param.h": "c",
         "defs.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "cstdio": "c",
+        "user.h": "c"
     }
 }
