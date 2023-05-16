@@ -307,7 +307,12 @@ fork(void)
     if(p->ofile[i])
       np->ofile[i] = filedup(p->ofile[i]);
   np->cwd = idup(p->cwd);
-
+  
+  memmove(np->mmap,p->mmap,sizeof(p->mmap));
+  for(int i=0;i<16;i++){
+    if(p->mmap[i].valid)
+      np->mmap[i].file=filedup(p->mmap[i].file);
+  }
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
@@ -340,6 +345,7 @@ reparent(struct proc *p)
   }
 }
 
+extern uint64 sys_munmap();
 // Exit the current process.  Does not return.
 // An exited process remains in the zombie state
 // until its parent calls wait().
@@ -359,7 +365,14 @@ exit(int status)
       p->ofile[fd] = 0;
     }
   }
-
+  //munmap all
+  for(int i=0;i<16;i++){
+    if(p->mmap[i].valid){
+      p->trapframe->a0=p->mmap[i].addr;
+      p->trapframe->a1=p->mmap[i].length;
+      sys_munmap();
+    }
+  }
   begin_op();
   iput(p->cwd);
   end_op();
